@@ -1,0 +1,69 @@
+name: tests + mypy
+
+on:
+  push:
+    branches: [ "major_update_6", "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # install & configure poetry
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      # # load cached venv if cache exists
+      # - name: Load cached venv
+      #   id: cached-poetry-dependencies
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: .venv
+      #     key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      # # install dependencies if cache does not exist
+      # - name: Install dependencies
+      #   if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      #   run: poetry install --no-interaction --no-root
+
+      # install root project
+      - name: Install project
+        run: poetry install --no-interaction --with dev
+
+      - name: MyPy Checks
+        run: poetry run mypy miceforest --ignore-missing-imports
+
+      - name: Black Formatting - Package
+        run: poetry run black miceforest --check
+
+      - name: Black Formatting - Tests
+        run: poetry run black tests --check
+
+      - name: Isort Checks
+        run: poetry run isort miceforest --diff
+
+      - name: Pytest
+        run: poetry run pytest --cov=miceforest --cov-report html
+
+      - name: Upload coverage reports to Codecov
+        run: |
+          curl -Os https://cli.codecov.io/latest/linux/codecov
+          chmod +x codecov
+          poetry run ./codecov --verbose upload-process -t ${{ secrets.CODECOV_TOKEN }} -n 'service'-${{ github.run_id }} -F service -f coverage-service.xml
+

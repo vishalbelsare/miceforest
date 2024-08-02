@@ -8,24 +8,17 @@ Extensive tutorials can be found on the github README:
 https://github.com/AnotherSamWilson/miceforest
 """
 
+import importlib.metadata
 
-from .utils import ampute_data, load_kernel
-from .ImputedData import ImputedData
-from .ImputationKernel import ImputationKernel
-from .builtin_mean_match_schemes import (
-    mean_match_default,
-    mean_match_fast_cat,
-    mean_match_shap,
-)
+from .imputation_kernel import ImputationKernel
+from .imputed_data import ImputedData
+from .utils import ampute_data
 
-__version__ = "5.6.0"
+__version__ = importlib.metadata.version("miceforest")
+
 
 __all__ = [
     "ImputedData",
     "ImputationKernel",
-    "mean_match_default",
-    "mean_match_fast_cat",
-    "mean_match_shap",
     "ampute_data",
-    "load_kernel",
 ]

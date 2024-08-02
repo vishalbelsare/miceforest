@@ -1,12 +1,8 @@
-ImputationKernel
-================
+ImputationKernel Class
+======================
 
-.. currentmodule:: miceforest
-
-ImputationKernel
-----------------
-
-.. autosummary::
-    :toctree: ik/
-
-    ImputationKernel
+.. autoclass:: miceforest.imputation_kernel.ImputationKernel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:

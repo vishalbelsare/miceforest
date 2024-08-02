@@ -1,12 +1,7 @@
-ImputedData
-===========
+ImputedData Class
+=================
 
-.. currentmodule:: miceforest
-
-ImputedData
------------
-
-.. autosummary::
-    :toctree: id/
-
-    ImputedData
+.. autoclass:: miceforest.imputed_data.ImputedData
+   :members:
+   :undoc-members:
+   :show-inheritance:
